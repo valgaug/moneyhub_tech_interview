@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const config = require('config');
 const util = require('util');
 const request = util.promisify(require('request'));
-const R = require('ramda');
 
 const app = express();
 
@@ -51,7 +50,7 @@ app.get('/generate-report', async (req, res) => {
           LastName: investment.lastName,
           Date: investment.date,
           Holding: company.name,
-          Value: value.toFixed(2),
+          Value: value.toFixed(0),
         });
       });
     });
@@ -59,12 +58,19 @@ app.get('/generate-report', async (req, res) => {
     console.log(processedData);
 
     // Generate CSV string
+    const headers = '|User|First Name|Last Name|Date|Holding|Value|\n';
+    const csvRows = processedData.map((row) => {
+      return `|${row.User}|${row.FirstName}|${row.LastName}|${row.Date}|${row.Holding}|${row.Value}|`;
+    });
+    const csvString = headers + csvRows.join('\n');
+
+    console.log(csvString);
 
     // Send the CSV report to the investments service /export route
 
     // Respond with the CSV as the content of the response
     res.setHeader('Content-Type', 'text/csv');
-    // res.send(csvString);
+    res.send(csvString);
   } catch (error) {
     console.error('Error generating report:', error);
     res.sendStatus(500);

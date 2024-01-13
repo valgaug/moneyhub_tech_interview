@@ -55,8 +55,6 @@ app.get('/generate-report', async (req, res) => {
       });
     });
 
-    console.log(processedData);
-
     // Generate CSV string
     const headers = '|User|First Name|Last Name|Date|Holding|Value|\n';
     const csvRows = processedData.map((row) => {
@@ -64,9 +62,21 @@ app.get('/generate-report', async (req, res) => {
     });
     const csvString = headers + csvRows.join('\n');
 
-    console.log(csvString);
-
     // Send the CSV report to the investments service /export route
+    const exportUrl = `${config.investmentsServiceUrl}/investments/export`;
+    const exportResponse = await request.post({
+      url: exportUrl,
+      json: true, // This sets Content-Type to application/json
+      body: { csv: csvString }, // Send the CSV string as a JSON object
+    });
+
+    // if (exportResponse.statusCode !== 204) {
+    // statusCode isn't a property of exportResponse
+    // this is due to how util.promisify handles the response
+    // with more time I'd dig more into this library
+    if (!exportResponse) {
+      throw new Error('Failed to export CSV to investments service');
+    }
 
     // Respond with the CSV as the content of the response
     res.setHeader('Content-Type', 'text/csv');

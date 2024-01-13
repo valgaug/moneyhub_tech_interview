@@ -36,21 +36,27 @@ You are free to use any packages that would help with this task
 
 We're interested in how you break down the work and build your solution in a clean, reusable and testable manner rather than seeing a perfect example, try to only spend around _1-2 hours_ working on it
 
-## Deliverables
+## Deliverables (UPDATED)
 
 **Please make sure to update the readme with**:
 
+- Run `npm i` in the admin folder to install extra dependencies
 - Your new route:
   `localhost:8083/generate-report`
 - How to run any additional scripts or tests you may have added: `npm test` (to run unit tests) in the admin folder
 - Relating to the task please add answers to the following questions;
   1. How might you make this service more secure?
+     1. Implement authentication and authorization to restrict access
+     2. Use HTTPS for secure communication
+     3. Sanitize inputs to prevent SQL injection
   2. How would you make this solution scale to millions of records?
+     1. Implement pagination to limit the number of records returned in a single request
+     2. Use a scalable database system and optimize queries
+     3. Consider using caching mechanisms to reduce database load
   3. What else would you have liked to improve given more time?
-     1. Sort the list by user instead of holdings
-     2. Use of Ramda instead of plain Javascript
-     3. Restructure the codebase such as MVP architecture with an index, router and controller
-     4. add more edge cases such as
+     1. Improve error handling and add more detailed logging
+     2. Write more comprehensive tests, specially edge cases
+     3. Refactor code for better readability and maintainability
 
 On completion email a link to your repository to your contact at Moneyhub and ensure it is publicly accessible.
 

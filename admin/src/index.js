@@ -1,7 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const config = require('config');
-const request = require('request');
+const util = require('util');
+const request = util.promisify(require('request'));
 
 const app = express();
 
@@ -22,6 +23,12 @@ app.get('/investments/:id', (req, res) => {
 app.get('/generate-report', async (req, res) => {
   try {
     // Fetch data from investments service
+    const investmentsUrl = `${config.investmentsServiceUrl}/investments`;
+    const investmentsResponse = await request({ url: investmentsUrl, json: true });
+    if (investmentsResponse.statusCode !== 200) {
+      throw new Error('Failed to fetch investments');
+    }
+    const investmentsData = investmentsResponse.body;
 
     // Fetch data from financial-companies service
 

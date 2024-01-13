@@ -31,6 +31,14 @@ app.get('/generate-report', async (req, res) => {
     const investmentsData = investmentsResponse.body;
 
     // Fetch data from financial-companies service
+    const companiesUrl = `${config.financialCompaniesServiceUrl}/companies`;
+    const companiesResponse = await request({ url: companiesUrl, json: true });
+    if (companiesResponse.statusCode !== 200) {
+      throw new Error('Failed to fetch financial companies');
+    }
+    const companiesData = companiesResponse.body;
+
+    console.log(companiesData);
 
     // Process the data to calculate values
 

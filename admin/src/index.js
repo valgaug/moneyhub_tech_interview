@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const config = require('config');
 const util = require('util');
 const request = util.promisify(require('request'));
+const R = require('ramda');
 
 const app = express();
 
@@ -38,9 +39,24 @@ app.get('/generate-report', async (req, res) => {
     }
     const companiesData = companiesResponse.body;
 
-    console.log(companiesData);
-
     // Process the data to calculate values
+    const processedData = [];
+    investmentsData.forEach((investment) => {
+      investment.holdings.forEach((holding) => {
+        const company = companiesData.find((company) => company.id === holding.id);
+        const value = investment.investmentTotal * holding.investmentPercentage;
+        processedData.push({
+          User: investment.userId,
+          FirstName: investment.firstName,
+          LastName: investment.lastName,
+          Date: investment.date,
+          Holding: company.name,
+          Value: value.toFixed(2),
+        });
+      });
+    });
+
+    console.log(processedData);
 
     // Generate CSV string
 
